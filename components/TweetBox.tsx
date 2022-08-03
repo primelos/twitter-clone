@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useRef, useState } from "react";
+import React, { MouseEvent, useRef, useState } from "react";
 import {
   CalendarIcon,
   EmojiHappyIcon,
@@ -8,8 +8,15 @@ import {
   SearchCircleIcon,
 } from "@heroicons/react/outline";
 import { useSession } from "next-auth/react";
+import { Tweet, TweetBody } from "../typings";
+import { fetchTweets } from "../utils/fetchTweets";
+import toast from "react-hot-toast";
 
-const TweetBox = () => {
+interface Props {
+  setTweets: React.Dispatch<React.SetStateAction<Tweet[]>>;
+}
+
+const TweetBox = ({ setTweets }: Props) => {
   const [input, setInput] = useState<string>("");
   const [image, setImage] = useState<string>("");
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -18,12 +25,50 @@ const TweetBox = () => {
   const [imageUrlBoxIsOpen, setImageUrlBoxIsOpen] = useState<boolean>(false);
 
   const addImageToTweet = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    e: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
   ) => {
     e.preventDefault();
     if (!imageInputRef.current?.value) return;
     setImage(imageInputRef.current.value);
     imageInputRef.current.value = "";
+    setImageUrlBoxIsOpen(false);
+  };
+
+  const postTweet = async () => {
+    const tweetInfo: TweetBody = {
+      text: input,
+      username: session?.user?.name || "Unknown user",
+      profileImg:
+        session?.user?.image ||
+        "https://www.seekpng.com/png/detail/966-9665317_placeholder-image-person-jpg.png",
+      image: image,
+    };
+    console.log("tweetInfo", tweetInfo);
+    const results = await fetch(`/api/addTweet`, {
+      body: JSON.stringify(tweetInfo),
+      method: "POST",
+    });
+    const json = await results.json();
+
+    const newTweets = await fetchTweets();
+    setTweets(newTweets);
+
+    toast("Tweet posted!", {
+      icon: "🚀",
+    });
+
+    return json;
+  };
+
+  const handleSubmit = (
+    e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
+  ) => {
+    e.preventDefault();
+
+    postTweet();
+
+    setInput("");
+    setImage("");
     setImageUrlBoxIsOpen(false);
   };
 
@@ -60,6 +105,7 @@ const TweetBox = () => {
               <LocationMarkerIcon className="h-5 w-5 cursor-pointer transition-transform duration-150 ease-out hover:scale-150" />
             </div>
             <button
+              onClick={handleSubmit}
               disabled={!input || !session}
               className="bg-twitter px-5 py-2 font-bold rounded-full text-white disabled:opacity-40"
             >

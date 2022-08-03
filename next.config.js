@@ -8,6 +8,7 @@ module.exports = {
       "lh3.googleusercontent.com",
       "carlosfvenegas.com",
       "pbs.twimg.com",
+      "www.seekpng.com",
     ],
   },
 };
