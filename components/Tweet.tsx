@@ -27,7 +27,6 @@ const Tweet = ({ tweet }: Props) => {
     const comments: Comment[] = await fetchComments(tweet._id);
     setComments(comments);
   };
-  console.log("session", tweet);
   useEffect(() => {
     refreshComments();
   }, []);

@@ -43,7 +43,6 @@ const TweetBox = ({ setTweets }: Props) => {
         "https://www.seekpng.com/png/detail/966-9665317_placeholder-image-person-jpg.png",
       image: image,
     };
-    console.log("tweetInfo", tweetInfo);
     const results = await fetch(`/api/addTweet`, {
       body: JSON.stringify(tweetInfo),
       method: "POST",
