@@ -12,9 +12,9 @@ interface Props {
 }
 
 const Home = ({ tweets }: Props) => {
-  console.log(tweets);
   return (
     <div className="lg:max-w-6xl max-h-screen overflow-hidden">
+      {console.log("inside div")}
       <Head>
         <title>Twitter 2.0</title>
         <link rel="icon" href="/favicon.ico" />
