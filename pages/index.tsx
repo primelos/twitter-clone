@@ -14,7 +14,6 @@ interface Props {
 const Home = ({ tweets }: Props) => {
   return (
     <div className="lg:max-w-6xl max-h-screen overflow-hidden">
-      {console.log("inside div")}
       <Head>
         <title>Twitter 2.0</title>
         <link rel="icon" href="/favicon.ico" />
@@ -23,7 +22,7 @@ const Home = ({ tweets }: Props) => {
 
       <main className="grid grid-cols-9">
         <Sidebar />
-        <Feed tweets={tweets} />
+        {/* <Feed tweets={tweets} /> */}
         <Widgets />
       </main>
     </div>
